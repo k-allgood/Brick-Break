@@ -1,0 +1,20 @@
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: steelblue;
+}
+
+#gamescreen {
+  display: flex;
+  align-self: center;
+  background-color: rgba(245, 245, 245);
+  border: 2px solid #333;
+}
+
+#restart {
+  display: flex;
+  align-self: center;
+  width: 10%;
+  padding: 1% 0;
+  text-align: center;
+}
