@@ -2,8 +2,43 @@ const canvas = document.getElementById("gamescreen");
 const ctx = canvas.getContext("2d");
 const gameWidth = 800;
 const gameHeight = 600;
+let brickColumns = 5;
+let brickRows = 4;
+let allBricks = [];
 
-ctx.clearRect(0, 0, 800, 600);
+class Brick {
+  constructor() {
+    this.width = 75;
+    this.height = 20;
+    this.position = {
+      x: 0,
+      y: 0,
+    };
+    this.padding = 5;
+    this.offsetTop = 30;
+    this.offsetLeft = 30;
+  }
+
+  draw(ctx) {
+    for (let c = 0; c < brickColumns; c++) {
+      for (let r = 0; r < brickRows; r++) {
+        if (c === brickColumns && r === brickRows) {
+          return;
+        } else {
+          //Set each bricks (x,y) coords
+          let brickX = c * (this.width + this.padding) + this.offsetLeft;
+          let brickY = r * (this.height + this.padding) + this.offsetTop;
+
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, this.width, this.height);
+          ctx.fillStyle = "green";
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+    }
+  }
+}
 
 class Paddle {
   constructor(gameWidth, gameHeight) {
@@ -75,14 +110,18 @@ class Ball {
   }
 }
 
+let brick = new Brick();
 let paddle = new Paddle(gameWidth, gameHeight);
 let ball = new Ball();
 
+brick.draw(ctx);
 paddle.draw(ctx);
+ball.draw(ctx);
 
-//Redraws the ball & paddle every 10ms
+//Redraws every 10ms
 let interval = setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  brick.draw(ctx);
   ball.draw(ctx);
   paddle.draw(ctx);
 }, 10);
@@ -92,8 +131,13 @@ const eventHandler = () => {
     switch (e.key) {
       case "ArrowLeft":
         //Move left
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        paddle.position.x -= 10;
+        ctx.clearRect(
+          paddle.position.x,
+          paddle.position.y,
+          paddle.width,
+          paddle.height
+        );
+        paddle.position.x -= 15;
         //Stops paddle from leaving left edge of screen
         if (paddle.position.x < 0) {
           paddle.position.x = 0;
@@ -102,8 +146,13 @@ const eventHandler = () => {
         break;
       case "ArrowRight":
         //Move right
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        paddle.position.x += 10;
+        ctx.clearRect(
+          paddle.position.x,
+          paddle.position.y,
+          paddle.width,
+          paddle.height
+        );
+        paddle.position.x += 15;
         //Stops paddle from leaving right edge of screen
         if (paddle.position.x > canvas.width - paddle.width) {
           paddle.position.x = canvas.width - paddle.width;
